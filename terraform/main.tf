@@ -22,8 +22,8 @@ resource "proxmox_vm_qemu" "vm-instance" {
     target_node         = "pve3"
     clone               = "ubuntu-2204-template"
     full_clone          = true
-    cores               = 2
-    memory              = 2048
+    cores               = 1
+    memory              = 1028
 
     disk {
         size            = "32G"
