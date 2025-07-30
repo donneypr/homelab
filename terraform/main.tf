@@ -6,6 +6,10 @@ terraform {
     }
 }
 
+variable "pm_api_url" {}
+variable "pm_api_token_id" {}
+variable "pm_api_token_secret" {}
+
 provider "proxmox" {
     pm_api_url          = var.pm_api_url
     pm_api_token_id     = var.pm_api_token_id
@@ -13,9 +17,6 @@ provider "proxmox" {
     pm_tls_insecure     = true
 }
 
-variable "pm_api_url" {}
-variable "pm_api_token_id" {}
-variable "pm_api_token_secret" {}
 
 resource "proxmox_vm_qemu" "vm-instance" {
     name                = "vm-instance"
