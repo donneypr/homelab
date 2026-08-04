@@ -1,0 +1,23 @@
+# Secrets and state - never commit
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.env
+*.pem
+*.key
+id_rsa
+id_ed25519
+kubeconfig
+*.kubeconfig
+
+# age / SOPS private key
+key.txt
+*.agekey
+
+# Tofu working dirs
+.terraform/
+.terraform.lock.hcl
+
+# macOS noise
+.DS_Store
