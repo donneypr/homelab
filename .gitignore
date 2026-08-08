@@ -17,7 +17,6 @@ key.txt
 
 # Tofu working dirs
 .terraform/
-.terraform.lock.hcl
 
 # macOS noise
 .DS_Store
