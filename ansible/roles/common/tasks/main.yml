@@ -1,0 +1,51 @@
+---
+- name: Wait for cloud-init to finish
+  ansible.builtin.command: cloud-init status --wait
+  changed_when: false
+  failed_when: false
+
+- name: Install baseline packages
+  ansible.builtin.apt:
+    name:
+      - qemu-guest-agent
+      - curl
+      - iptables
+      - nfs-common
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Enable qemu-guest-agent
+  ansible.builtin.systemd:
+    name: qemu-guest-agent
+    enabled: true
+    state: started
+
+- name: Load kernel modules needed by K3s networking
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - br_netfilter
+    - overlay
+
+- name: Persist those modules across reboots
+  ansible.builtin.copy:
+    dest: /etc/modules-load.d/k3s.conf
+    content: |
+      br_netfilter
+      overlay
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Set sysctl values K3s expects
+  ansible.posix.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_file: /etc/sysctl.d/99-k3s.conf
+    reload: true
+  loop:
+    - { key: net.bridge.bridge-nf-call-iptables, value: "1" }
+    - { key: net.bridge.bridge-nf-call-ip6tables, value: "1" }
+    - { key: net.ipv4.ip_forward, value: "1" }

@@ -1,0 +1,6 @@
+---
+k3s_init_host: k3s-1
+
+k3s_disable:
+  - traefik
+  - servicelb
