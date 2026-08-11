@@ -61,3 +61,43 @@
         mode: "0600"
       delegate_to: localhost
       become: false
+
+- name: Bootstrap Argo CD
+  hosts: k3s-1
+  become: true
+  vars:
+    argocd_version: v3.4.6
+  tasks:
+    - name: Create the argocd namespace
+      ansible.builtin.command:
+        cmd: k3s kubectl create namespace argocd
+      register: ns
+      changed_when: ns.rc == 0
+      failed_when: ns.rc != 0 and 'AlreadyExists' not in ns.stderr
+
+    - name: Install Argo CD
+      ansible.builtin.command:
+        cmd: >
+          k3s kubectl apply -n argocd --server-side --force-conflicts -f
+          https://raw.githubusercontent.com/argoproj/argo-cd/{{ argocd_version }}/manifests/install.yaml
+      register: install
+      changed_when: "'serverside-applied' in install.stdout"
+
+    - name: Wait for the Argo CD server to come up
+      ansible.builtin.command:
+        cmd: >
+          k3s kubectl wait -n argocd --for=condition=Available
+          deployment/argocd-server --timeout=600s
+      changed_when: false
+
+    - name: Copy the root Application to the node
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../clusters/prod/bootstrap/root-app.yaml"
+        dest: /tmp/root-app.yaml
+        mode: "0644"
+
+    - name: Apply the root Application
+      ansible.builtin.command:
+        cmd: k3s kubectl apply -f /tmp/root-app.yaml
+      register: root
+      changed_when: "'created' in root.stdout or 'configured' in root.stdout"
