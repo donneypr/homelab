@@ -15,6 +15,8 @@ spec:
       releaseName: podinfo
       valuesObject:
         replicaCount: 2
+        service:
+          type: LoadBalancer
         resources:
           requests:
             cpu: 10m
