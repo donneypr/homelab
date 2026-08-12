@@ -1,0 +1,49 @@
+# A second Service in front of the argocd-server pods, so the UI has a stable
+# LAN address without a port-forward.
+#
+# This is additive on purpose. The stock argocd-server ClusterIP Service is
+# created imperatively by ansible/site.yml from the upstream install.yaml, so
+# Argo CD does not own it. If Argo CD managed that Service instead, every
+# `ansible-playbook site.yml` run would reset it to ClusterIP and selfHeal
+# would immediately flip it back, forever. A separate Service sidesteps that
+# and survives Argo CD version bumps untouched.
+#
+# LAN only. There is deliberately no Ingress and no public DNS record here:
+# argocd-server can write anything to this cluster, so it should not be
+# reachable from the same place podinfo is.
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-server-lb
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-server-lb
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+  annotations:
+    # spec.loadBalancerIP is deprecated upstream; MetalLB reads this instead.
+    metallb.io/loadBalancerIPs: "192.168.2.244"
+spec:
+  type: LoadBalancer
+
+  # Cluster, not Local. argocd-server runs a single replica, and MetalLB in L2
+  # mode answers ARP from one elected node. With Local, that node only forwards
+  # to a pod on itself, so the address goes dark whenever the leader is not the
+  # node running the pod. Source IPs are not preserved, which does not matter
+  # for a LAN admin UI.
+  externalTrafficPolicy: Cluster
+
+  # Matches the selector the upstream v3.4.6 argocd-server Service uses.
+  selector:
+    app.kubernetes.io/name: argocd-server
+
+  ports:
+    # argocd-server redirects :80 to :443 itself, so plain http://<ip> works.
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 8080
