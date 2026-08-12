@@ -61,8 +61,8 @@ variable "k3s_nodes" {
     proxmox_node = string
     vm_id        = number
     ipv4_cidr    = string
-    cores = optional(number)
-    memory_mb = optional(number)
+    cores        = optional(number)
+    memory_mb    = optional(number)
   }))
 }
 
