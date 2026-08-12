@@ -11,7 +11,9 @@
   tasks:
     - name: Install K3s with embedded etcd
       ansible.builtin.shell:
+        executable: /bin/bash
         cmd: >
+          set -o pipefail;
           curl -sfL https://get.k3s.io |
           INSTALL_K3S_EXEC="server --cluster-init
           --token {{ k3s_token }}
@@ -33,7 +35,9 @@
   tasks:
     - name: Install K3s and join the cluster
       ansible.builtin.shell:
+        executable: /bin/bash
         cmd: >
+          set -o pipefail;
           curl -sfL https://get.k3s.io |
           INSTALL_K3S_EXEC="server
           --server https://{{ hostvars['k3s-1'].ansible_host }}:6443

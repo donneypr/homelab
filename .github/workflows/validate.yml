@@ -26,6 +26,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install ansible-lint
+      - run: ansible-galaxy collection install -r requirements.yml
+        working-directory: ansible
       - run: ansible-lint
         working-directory: ansible
 
