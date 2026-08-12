@@ -8,30 +8,30 @@ proxmox_insecure = true
 
 network_gateway = "192.168.2.1"
 
-# Pi-hole first, public resolver second so the nodes keep DNS if Pi-hole is down
-dns_servers = ["192.168.2.CHANGEME", "1.1.1.1"]
+dns_servers = ["192.168.2.1", "1.1.1.1"]
 
 ssh_public_keys = [
   "ssh-ed25519 AAAA... don@macbook",
 ]
 
-# Start with one node. Add the other two once the first VM boots and you can SSH in.
+# The LAN reserves 192.168.2.240-254 for static assignment.
+# DHCP hands out 192.168.2.10-239.
 k3s_nodes = {
   "k3s-1" = {
     proxmox_node = "pve1"
     vm_id        = 201
-    ipv4_cidr    = "192.168.2.31/24"
+    ipv4_cidr    = "192.168.2.201/24"
   }
 
-  # "k3s-2" = {
-  #   proxmox_node = "pve2"
-  #   vm_id        = 202
-  #   ipv4_cidr    = "192.168.2.32/24"
-  # }
-  #
-  # "k3s-3" = {
-  #   proxmox_node = "pve3"
-  #   vm_id        = 203
-  #   ipv4_cidr    = "192.168.2.33/24"
-  # }
+  "k3s-2" = {
+    proxmox_node = "pve2"
+    vm_id        = 202
+    ipv4_cidr    = "192.168.2.202/24"
+  }
+
+  "k3s-3" = {
+    proxmox_node = "pve3"
+    vm_id        = 203
+    ipv4_cidr    = "192.168.2.203/24"
+  }
 }

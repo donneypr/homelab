@@ -51,7 +51,7 @@ variable "network_bridge" {
 }
 
 variable "dns_servers" {
-  description = "Resolvers handed to cloud-init. Point at Pi-hole."
+  description = "Resolvers handed to cloud-init"
   type        = list(string)
 }
 

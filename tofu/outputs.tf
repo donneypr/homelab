@@ -1,5 +1,5 @@
 output "k3s_nodes" {
-  description = "Node name to address map, consumed by the Ansible inventory generator"
+  description = "Node name to address map. Keep ansible/inventory/hosts.ini in sync with this."
   value = {
     for name, cfg in var.k3s_nodes :
     name => {
