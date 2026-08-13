@@ -1,8 +1,0 @@
----
-exclude_paths:
-  - group_vars/k3s_cluster/vault.yml
-
-skip_list:
-  # curl | sh is the documented K3s install method. Rewriting it with
-  # get_url plus a separate execute step is worse, not better.
-  - command-instead-of-module

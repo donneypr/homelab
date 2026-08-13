@@ -1,4 +1,0 @@
----
-k3s_disable:
-  - traefik
-  - servicelb
