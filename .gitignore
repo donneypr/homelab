@@ -20,3 +20,5 @@ key.txt
 
 # macOS noise
 .DS_Store
+
+terraform/.env
