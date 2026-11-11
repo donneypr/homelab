@@ -1,17 +1,17 @@
 terraform {
-	required_providers {
-		proxmox = {
-			source = "bpg/proxmox"
-			version = "~> 0.111"
-			}
-	}
+  required_providers {
+    proxmox = {
+      source  = "bpg/proxmox"
+      version = "~> 0.121.0"
+    }
+  }
 }
 
 provider "proxmox" {
-	insecure = true
+  insecure = true
 
-	ssh {
-		agent = true
-		username = "root"
-	}
+  ssh {
+    agent    = true
+    username = "root"
+  }
 }
