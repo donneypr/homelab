@@ -1,0 +1,9 @@
+vm_name                = "name"
+cpu_cores              = cores
+memory_size            = memory
+disk_size              = disksize
+network_bridge         = "vmbr0"
+ubuntu_cloud_image_url = "cloud_image"
+disk_datastore         = "local_lvm"
+cloud_image_datastore  = "local"
+node_name              = "pve1"
