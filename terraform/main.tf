@@ -1,6 +1,6 @@
 resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
-  name            = "test-ubuntu"
-  node_name       = "pve1"
+  name            = var.vm_name
+  node_name       = var.node_name
   stop_on_destroy = true
 
 
@@ -11,43 +11,41 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
       }
     }
     user_account {
-      username = ""
-      password = ""
+      username = var.username
+      password = var.password
     }
   }
 
   cpu {
-    cores = 2
+    cores = var.cpu_cores
   }
 
   memory {
-    dedicated = 2048
+    dedicated = var.memory_size
   }
 
   network_device {
-    bridge = "vmbr0"
+    bridge = var.network_bridge
   }
 
   disk {
-    datastore_id = "local-lvm"
+    datastore_id = var.disk_datastore
     import_from  = proxmox_download_file.ubuntu_cloud_image.id
     interface    = "virtio0"
     iothread     = true
     discard      = "on"
-    size         = 20
+    size         = var.disk_size
   }
 
   serial_device {
     device = "socket"
   }
-
-
 }
 
 resource "proxmox_download_file" "ubuntu_cloud_image" {
   content_type = "import"
-  datastore_id = "local"
-  node_name    = "pve1"
-  url          = "https://cloud-images.ubuntu.com/releases/resolute/release/ubuntu-26.04-server-cloudimg-amd64.img"
+  datastore_id = var.cloud_image_datastore
+  node_name    = var.node_name
+  url          = var.ubuntu_cloud_image_url
   file_name    = "ubuntu-26.04-server-cloudimg-amd64.qcow2"
 }
