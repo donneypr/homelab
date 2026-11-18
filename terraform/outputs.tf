@@ -6,7 +6,6 @@ output "cluster_nodes" {
     cpu_count        = data.proxmox_virtual_environment_nodes.nodes.cpu_count
     online           = data.proxmox_virtual_environment_nodes.nodes.online
     memory_available = data.proxmox_virtual_environment_nodes.nodes.memory_available
-    uptime           = data.proxmox_virtual_environment_nodes.nodes.uptime
   }
 }
 
