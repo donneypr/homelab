@@ -53,3 +53,13 @@ variable "password" {
   type        = string
   sensitive   = true
 }
+
+variable "address" {
+  description = "IP address for the virtual machine"
+  type        = string
+}
+
+variable "gateway" {
+  description = "Gateway for the virtual machine"
+  type        = string
+}

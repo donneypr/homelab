@@ -2,14 +2,16 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
   name            = var.vm_name
   node_name       = var.node_name
   stop_on_destroy = true
-
-
-
+  tags        = ["terraform", "ubuntu"]
 
   initialization {
+    dns {
+      servers = [var.gateway]
+    }
     ip_config {
       ipv4 {
-        address = "dhcp"
+        address = var.address
+        gateway = var.gateway
       }
     }
     user_account {
