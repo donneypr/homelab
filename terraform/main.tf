@@ -4,6 +4,8 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
   stop_on_destroy = true
 
 
+
+
   initialization {
     ip_config {
       ipv4 {
@@ -47,5 +49,5 @@ resource "proxmox_download_file" "ubuntu_cloud_image" {
   datastore_id = var.cloud_image_datastore
   node_name    = var.node_name
   url          = var.ubuntu_cloud_image_url
-  file_name    = "ubuntu-26.04-server-cloudimg-amd64.qcow2"
+  file_name    = "${trimsuffix(basename(var.ubuntu_cloud_image_url), ".img")}.qcow2"
 }
